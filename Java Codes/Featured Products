@@ -1,0 +1,36 @@
+class Result {
+
+    /*
+     * Complete the 'featuredProduct' function below.
+     *
+     * The function is expected to return a STRING.
+     * The function accepts STRING_ARRAY products as parameter.
+     */
+
+    public static String featuredProduct(List<String> products) {
+    // Write your code here
+    HashMap<String,Integer> hm = new HashMap<String,Integer>();
+    for(int i=0;i<products.size();i++)
+    {
+        if(hm.containsKey(products.get(i)))
+        {
+            hm.put(products.get(i),hm.get(products.get(i))+1);
+        }
+        else
+        {
+            hm.put(products.get(i),1);
+        }
+    }
+    int res=0;
+    String str="";
+    for (Map.Entry mapElement : hm.entrySet()) { 
+        if((int)mapElement.getValue()>res)
+        {
+            res=(int)mapElement.getValue();
+            str=(String)mapElement.getKey();
+        }
+    }
+    return str;
+    }
+
+}
