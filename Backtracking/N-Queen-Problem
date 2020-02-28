@@ -1,0 +1,62 @@
+
+import java.util.*;
+public class NQueenProblem{
+
+    class Position {
+        int row,col;
+        Position(int row,int col)
+        {
+            this.row=row;
+            this.col=col;
+        }
+    }
+    public Position[] solveNQueen(int n)
+    {
+        Position[] positions=new Position[n];
+        boolean hasSol= solveNQueenSolution(n,0,positions);
+        if(hasSol)
+        return positions;
+        else
+        return new Position[0];
+    }
+    private boolean solveNQueenSolution(int n,int row,Position[] pos)
+    {
+        if(n==row)
+        return true;
+        for(int col=0;col<n;col++)
+        {
+            boolean foundSafe=true;
+            for(int queen=0;queen<row;queen++)
+            {
+                if(pos[queen].col==col || pos[queen].row-pos[queen].col==row-col ||
+                pos[queen].row+pos[queen].col== row+col)
+                {
+                    foundSafe=false;
+                    break;
+                }
+            }
+            if(foundSafe)
+            {
+                pos[row]=new Position(row,col);
+                if(solveNQueenSolution(n,row+1,pos))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    public static void main(String []args){
+        
+        Scanner sc=new Scanner(System.in);
+        System.out.print("Enter the size of matrix : ");
+        int n=sc.nextInt();
+        sc.close();
+        NQueenProblem ob=new NQueenProblem();
+        Position pos[]=ob.solveNQueen(n);
+        for(int i=0;i<n;i++)
+        {
+            System.out.println("Position of Queen "+(i+1)+" is ("+pos[i].row+", "+pos[i].col+")");
+        }
+    }
+}
