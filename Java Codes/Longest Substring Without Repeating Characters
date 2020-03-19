@@ -1,0 +1,53 @@
+/* Get the Length of Longest Substring Without Repeating Characters
+ * Input : "abcabcbb"
+ * Output : 3 ("abc")
+ * 
+ * Input : "bbbbb"
+ * Output : 1 ("b")
+ * 
+ */
+
+package com.sheena.coding;
+
+import java.util.HashSet;
+import java.util.Scanner;
+
+class LongestSubstringWithoutRepeatingCharactersSolution
+{
+
+	public int getLengthOfLongestSubstring(String s) {
+		int first_p = 0;
+		int second_p = 0;
+		int max = 0;
+		HashSet<Character> hs = new HashSet<Character>();
+		while(second_p < s.length())
+		{
+			if(!hs.contains(s.charAt(second_p)))
+			{
+				hs.add(s.charAt(second_p));
+				second_p++;
+				max = Math.max(hs.size(), max);
+			}
+			else
+			{
+				hs.remove(s.charAt(first_p));
+				first_p++;
+			}
+		}
+		return max;
+	}
+	
+}
+
+public class LongestSubstringWithoutRepeatingCharacters {
+
+	public static void main(String[] args) {
+		Scanner sc=new Scanner(System.in);
+		String str=sc.next();
+		sc.close();
+		LongestSubstringWithoutRepeatingCharactersSolution obj=new LongestSubstringWithoutRepeatingCharactersSolution();
+		System.out.println("Length of Longest substring without repeating characters : "+obj.getLengthOfLongestSubstring(str));
+
+	}
+
+}
