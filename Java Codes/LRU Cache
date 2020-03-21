@@ -1,0 +1,128 @@
+/* TARGET : get() and put() in O(1)
+ * therefore, used hashmap.
+ * remove() from any place and add() in front in O(1)
+ * therefore, doubly linked list.
+ * 
+ * get() - when want to access,
+ * check if it already exists, if it does then;
+ * remove it from its position and push in front And return its value.
+ * if it doesn't exist;
+ * 		return -1
+ * 
+ * 
+ * put() - when we want to push it
+ * check if it already exists, if it does then;
+ * remove it from its position and push in front with updated value.
+ * if it doesn't exist;
+ * 		check for the capacity,if it exceeds,
+ * 			remove the last element (i.e least recently used)
+ * 			And, push this in front.
+ * 		if it doesn't exceed the capacity,
+ * 			push it in front.
+ */
+
+package com.sheena.coding;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class LRU_Cache {
+	
+	final Node head = new Node();
+	final Node tail = new Node();
+	Map<Integer, Node> node_map;
+	int cache_capacity;
+	
+	
+	class Node {
+		int key;
+		int val;
+		Node prev;
+		Node next;	
+	}
+	
+	public LRU_Cache(int capacity)
+	{
+		node_map = new HashMap(capacity);
+		this.cache_capacity = capacity;
+		head.next = tail;
+		tail.prev = head;
+	}
+	
+	public int get(int key)
+	{
+		int result = -1;
+		Node node = node_map.get(key);
+		if(node != null)
+		{
+			result = node.val;
+			remove(node);
+			add(node);
+		}
+		return result;
+	}
+	
+	public void put(int key,int value)
+	{
+		Node node = node_map.get(key);
+		if(node!=null)
+		{
+			remove(head);
+			node.val = value;
+			add(node);
+		}
+		else
+		{
+			if(node_map.size() == cache_capacity)
+			{
+				node_map.remove(tail.prev.key);
+				remove(tail.prev);
+			}
+			
+			Node new_node = new Node();
+			new_node.key = key;
+			new_node.val = value;
+			
+			node_map.put(key, new_node);
+			add(new_node);
+		}
+	}
+	
+	public void add(Node node) {
+		Node head_next = head.next;
+		node.next = head_next;
+		head_next.prev = node;
+		head.next = node;
+		node.prev = head;
+	}
+	public void remove(Node node) {
+		Node next_node = node.next;
+		Node prev_node = node.prev;
+		
+		next_node.prev = prev_node;
+		prev_node.next = next_node;
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the capacity : ");
+		int capacity = sc.nextInt();
+		sc.close();
+		LRU_Cache cache = new LRU_Cache(capacity);
+		cache.put(1, 1);
+		cache.put(2, 2);
+		System.out.println(cache.get(1));       // returns 1
+		cache.put(3, 3);    					// evicts key 2
+		System.out.println(cache.get(2));       // returns -1 (not found)
+		cache.put(4, 4);    					// evicts key 1
+		System.out.println(cache.get(1));       // returns -1 (not found)
+		System.out.println(cache.get(3));       // returns 3
+		System.out.println(cache.get(4));       // returns 4
+	}
+
+}
+
+
+
+		
