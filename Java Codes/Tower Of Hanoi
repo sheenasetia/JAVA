@@ -1,0 +1,84 @@
+package com.sheena.coding;
+
+import java.util.Stack;
+
+public class TowerOfHanoi {
+
+	private static class Tower {
+	private String name;
+	private Stack<Integer> discs;
+
+		public Tower(String name) {
+			this.name = name;
+			discs = new Stack<Integer>();
+		}
+
+		@Override
+		public String toString() {
+			return "Tower name=" + name + ", discs=" + discs;
+		}
+
+		public void push(int i) {
+			//exception if the tower is not empty and the disc we are placing is bigger than the top most disk
+			if (discs.size() > 0 && i > discs.peek())
+				throw new RuntimeException("not allowed to place bigger disc over smaller one");
+			discs.push(i);
+		}
+
+		public int pop() {
+			//exception if there are no discs present on the tower
+			if (discs.size() == 0)
+				throw new RuntimeException("underflow case");
+			return discs.pop();
+		}
+
+		public int size() {
+			return discs.size();
+		}
+
+	}
+
+	private static void solve(Tower from, Tower using, Tower to, int n) {
+		/*
+		 * Strategy:
+		 * place n-1 discs anyhow from 1st tower to middle tower [use 3rd tower]
+		 * place the biggest leftout disc on 1st tower to resultant(3rd) tower.
+		 * place n-1 discs from middle tower, over that one disc present on resultant tower[use 1st tower]
+		 */
+		
+		if (n == 0)
+			return;
+		solve(from, to, using, n - 1);
+		move(from, to);
+		solve(using, from, to, n - 1);
+	}
+
+	private static void move(Tower from, Tower to) {
+		//exception if there are no discs present on the tower
+		if (from.size() == 0)
+			throw new RuntimeException("Underflow");
+		System.out.println("moving from tower " + from.name + " to tower " + to.name);
+		to.push(from.pop());
+	}
+
+	public static void main(String[] args) {
+		int n = 5;
+		Tower a = new Tower("A");
+		Tower b = new Tower("B");
+		Tower c = new Tower("C");
+		a.push(5);
+		a.push(4);
+		a.push(3);
+		a.push(2);
+		a.push(1);
+		System.out.println(a);
+		System.out.println(b);
+		System.out.println(c);
+		solve(a, b, c, n);
+		System.out.println(a);
+		System.out.println(b);
+		System.out.println(c);
+
+	}
+
+}
