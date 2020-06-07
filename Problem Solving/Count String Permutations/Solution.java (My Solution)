@@ -1,0 +1,91 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+
+
+class Result {
+
+    static long mod = 1000000007L;
+    
+    //helper function created for recursion
+    public static long fun(int i,ArrayList<Integer> al[], int k,long dp[][])
+    {
+        if(k==1)
+        return 1;
+
+        if(k==2)
+        return al[i].size()%mod;
+
+        if(dp[i][k]!=-1)
+        return dp[i][k];
+
+        long count=0;
+        for(int j=0;j<al[i].size();j++)
+        {
+            count+=fun(al[i].get(j),al,k-1,dp)%mod;
+        }
+        return dp[i][k]=count%mod;
+    }
+    
+    public static int countPerms(int n) {
+    // Write your code here
+
+        ArrayList<Integer>[] al=new ArrayList[5];
+        for(int i=0;i<5;i++)
+            al[i]=new ArrayList<>();
+    
+         //aeiou corresponds to 01234
+        al[0].add(1);
+        al[1].add(0);
+        al[1].add(2);
+        al[2].add(0);
+        al[2].add(1);
+        al[2].add(3);
+        al[2].add(4);
+        al[3].add(2);
+        al[3].add(4);
+        al[4].add(0);
+
+        long c=0;
+        long dp[][]=new long[5][n+1];
+        for(int i=0;i<5;i++)
+        {
+            for(int j=0;j<=n;j++)
+            {
+                dp[i][j]=-1;
+            }
+        }
+        for(int i=0;i<5;i++)
+        {
+            c+=fun(i,al,n,dp)%mod;
+        }
+
+        return (int)(c%mod);
+        
+    }
+
+}
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+
+        int n = Integer.parseInt(bufferedReader.readLine().trim());
+
+        int result = Result.countPerms(n);
+
+        bufferedWriter.write(String.valueOf(result));
+        bufferedWriter.newLine();
+
+        bufferedReader.close();
+        bufferedWriter.close();
+    }
+}
